@@ -1,0 +1,45 @@
+{
+  "name": "Daily Plan — Personal OS",
+  "short_name": "Daily Plan",
+  "description": "Nền tảng quản trị phát triển cá nhân: Goals, Habits, Finance, Vision",
+  "start_url": "./DASHBOARD.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "lang": "vi",
+  "categories": ["productivity", "lifestyle", "finance"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%233b82f6'/><text y='130' x='96' text-anchor='middle' font-size='110' font-family='system-ui'>📋</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%233b82f6'/><text y='360' x='256' text-anchor='middle' font-size='300' font-family='system-ui'>📋</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Hôm nay",
+      "short_name": "Hôm nay",
+      "description": "Mở trang kế hoạch hôm nay",
+      "url": "./DASHBOARD.html#today",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text y='80' font-size='80'>☀️</text></svg>", "sizes": "96x96" }]
+    },
+    {
+      "name": "Habits",
+      "short_name": "Habits",
+      "description": "Check-in habit hôm nay",
+      "url": "./DASHBOARD.html#habits",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><text y='80' font-size='80'>✅</text></svg>", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
+}
