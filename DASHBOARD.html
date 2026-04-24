@@ -2021,7 +2021,7 @@ input[type=range]{width:70px;cursor:pointer;accent-color:var(--blue)}
   <div class="grid g2">
     <div class="form-group">
       <label class="form-label">Loại tài sản</label>
-      <select class="form-select" id="inv-m-type">
+      <select class="form-select" id="inv-m-type" onchange="onInvTypeChange()">
         <option value="stock">📈 Cổ phiếu</option>
         <option value="crypto">🪙 Crypto</option>
         <option value="fund">🏦 Quỹ đầu tư</option>
@@ -2060,9 +2060,10 @@ input[type=range]{width:70px;cursor:pointer;accent-color:var(--blue)}
     </div>
   </div>
   <div class="grid g2" id="inv-m-api-row">
-    <div class="form-group">
-      <label class="form-label" title="CoinGecko ID cho crypto (vd: bitcoin, ethereum), hoặc mã cổ phiếu (VNM, BTC)">ID giá tự động <span style="color:var(--text3);font-size:.68rem">(tùy chọn)</span></label>
-      <input class="form-input" id="inv-m-coinid" placeholder="bitcoin / ethereum / VNM..."/>
+    <div class="form-group" id="inv-m-coinid-group">
+      <label class="form-label" id="inv-m-coinid-label">ID tự động</label>
+      <input class="form-input" id="inv-m-coinid" placeholder=""/>
+      <div id="inv-m-coinid-hint" style="font-size:.68rem;color:var(--text3);margin-top:4px"></div>
     </div>
     <div class="form-group">
       <label class="form-label">Nguồn giá</label>
@@ -5338,6 +5339,7 @@ function openInvestModal() {
   document.getElementById('inv-m-coinid').value = '';
   document.getElementById('inv-m-pricesrc').value = 'manual';
   document.getElementById('inv-m-preview').style.display = 'none';
+  onInvTypeChange();
   openModal('inv-asset-overlay');
   setTimeout(()=>document.getElementById('inv-m-name').focus(),100);
   ['inv-m-qty','inv-m-buy','inv-m-cur'].forEach(id=>{ document.getElementById(id).oninput=invUpdatePreview; });
@@ -5358,9 +5360,38 @@ function openInvEditModal(id) {
   document.getElementById('inv-m-notes').value = a.notes||'';
   document.getElementById('inv-m-coinid').value = a.coinId||'';
   document.getElementById('inv-m-pricesrc').value = a.priceSource||'manual';
+  onInvTypeChange();
+  // Restore user's saved source after type change
+  document.getElementById('inv-m-pricesrc').value = a.priceSource||'manual';
   openModal('inv-asset-overlay');
   invUpdatePreview();
   ['inv-m-qty','inv-m-buy','inv-m-cur'].forEach(id=>{ document.getElementById(id).oninput=invUpdatePreview; });
+}
+
+function onInvTypeChange() {
+  const type = document.getElementById('inv-m-type')?.value;
+  const srcEl = document.getElementById('inv-m-pricesrc');
+  const labelEl = document.getElementById('inv-m-coinid-label');
+  const hintEl  = document.getElementById('inv-m-coinid-hint');
+  const inpEl   = document.getElementById('inv-m-coinid');
+  const groupEl = document.getElementById('inv-m-coinid-group');
+  if (!type||!srcEl) return;
+
+  const cfg = {
+    crypto:      { src:'coingecko', label:'CoinGecko ID *',    ph:'bitcoin, ethereum, solana...', hint:'Tìm ID tại coingecko.com/coins (cột ID)', show:true },
+    stock:       { src:'vn-stock',  label:'Mã cổ phiếu *',     ph:'VNM, HPG, VIC, FPT...',        hint:'Mã cổ phiếu niêm yết tại HOSE/HNX',     show:true },
+    fund:        { src:'vn-stock',  label:'Mã quỹ *',          ph:'VFMVF4, SSISCA...',            hint:'Mã quỹ ETF/mở tại thị trường VN',        show:true },
+    gold:        { src:'gold',      label:'Không cần (tự động)',ph:'',                             hint:'Giá vàng QT tự lấy từ goldapi.io — không cần ID', show:false },
+    realestate:  { src:'manual',    label:'',                   ph:'',                             hint:'Bất động sản cập nhật thủ công',           show:false },
+    deposit:     { src:'manual',    label:'',                   ph:'',                             hint:'Tiết kiệm cập nhật thủ công',              show:false },
+  };
+  const c = cfg[type] || cfg.stock;
+  srcEl.value = c.src;
+  if (labelEl) labelEl.textContent = c.label;
+  if (hintEl)  hintEl.textContent  = c.hint;
+  if (inpEl)   inpEl.placeholder   = c.ph;
+  if (groupEl) groupEl.style.opacity = c.show ? '1' : '.45';
+  if (inpEl)   inpEl.readOnly = !c.show;
 }
 
 function invUpdatePreview() {
